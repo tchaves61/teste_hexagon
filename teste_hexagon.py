@@ -1,10 +1,9 @@
 import streamlit as st
+import pyodbc
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
-import os
-import sys
 
 # Configurações da página
 st.set_page_config(
@@ -14,9 +13,34 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS personalizados (mantido igual)
+# Estilos CSS personalizados
 st.markdown("""
 <style>
+    .stDatePicker > div > div {
+        overflow: visible !important;
+    }
+    
+    div[data-baseweb="popover"] {
+        transform: none !important;
+        inset: auto !important;
+        position: absolute !important;
+        z-index: 1000000 !important;
+    }
+    
+    div[data-baseweb="popover"] > div {
+        position: relative !important;
+        overflow: visible !important;
+    }
+    
+    div[data-baseweb="popover"] > div > div {
+        width: auto !important;
+        min-width: 300px !important;
+    }
+    
+    div[data-baseweb="popover"] > div > div > div {
+        position: static !important;
+    }
+    
     .main {
         background-color: #f8f9fa;
     }
@@ -57,7 +81,6 @@ st.markdown("""
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    /* Ajuste para números muito grandes */
     .stMetric div[data-testid="stMetricValue"] {
         font-size: 1.5rem !important;
         white-space: nowrap;
@@ -67,55 +90,22 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Função para conectar ao banco de dados (versão híbrida)
+# Função para conectar ao banco de dados
 @st.cache_resource
 def conectar_banco():
-    # Configurações (substitua com seus valores)
-    config = {
-        "server": "seu_servidor.database.windows.net" if os.environ.get("IS_CLOUD") else "localhost\\SQLEXPRESS",
-        "database": "AdventureWorks2022",
-        "username": os.getenv("DB_USERNAME", ""),  # Use variáveis de ambiente
-        "password": os.getenv("DB_PASSWORD", "")
-    }
-
     try:
-        # Tenta pymssql primeiro (funciona no Cloud)
-        import pymssql
-        conn = pymssql.connect(
-            server=config["server"],
-            user=config["username"],
-            password=config["password"],
-            database=config["database"]
+        conn = pyodbc.connect(
+            "DRIVER={ODBC Driver 18 for SQL Server};"
+            "SERVER=localhost\\SQLEXPRESS;"
+            "DATABASE=AdventureWorks2022;"
+            "Trusted_Connection=yes;"
+            "Encrypt=no;"
         )
-        st.success("Conectado via pymssql")
-        return conn
-    except ImportError:
-        st.warning("pymssql não disponível, tentando pyodbc...")
-    except Exception as e:
-        st.warning(f"Falha no pymssql: {str(e)}")
-
-    # Fallback para pyodbc (local)
-    try:
-        import pyodbc
-        conn_str = f"""
-            DRIVER={{ODBC Driver 18 for SQL Server}};
-            SERVER={config["server"]};
-            DATABASE={config["database"]};
-            Trusted_Connection=yes;
-            Encrypt=no;
-        """
-        conn = pyodbc.connect(conn_str)
-        st.success("Conectado via pyodbc")
         return conn
     except Exception as e:
-        st.error(f"Falha na conexão: {str(e)}")
+        st.error(f"Erro na conexão com o banco de dados: {str(e)}")
         return None
 
-# Verifica se está no Cloud (Streamlit Sharing, Heroku, etc.)
-if 'HOSTNAME' in os.environ or 'DEPLOY_ENVIRONMENT' in os.environ:
-    os.environ['IS_CLOUD'] = "true"
-
-# Restante do seu código (mantido igual a partir daqui)
 # Função para carregar os dados com JOINs otimizados
 @st.cache_data
 def carregar_dados():
