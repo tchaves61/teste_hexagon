@@ -60,7 +60,7 @@ st.markdown("""
         color: #ffffff !important;
     }
     .stMetric div {
-        font-size: 1.8rem !important;
+        font-size: 1.4rem !important;
         font-weight: bold !important;
         color: #ffffff !important;
     }
