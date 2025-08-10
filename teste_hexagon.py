@@ -348,5 +348,5 @@ with st.expander("🔍 Visualizar Dados Brutos", expanded=False):
 st.markdown("""
 ---
 **Dashboard desenvolvido por** Thiago Chaves  
-Dados: AdventureWorks 2022 | Última atualização: {}
-""".format(datetime.now().strftime("%d/%m/%Y %H:%M")))
+Dados: AdventureWorks 2022 | Última atualização: 10/08/2025 20:08"""
+)
