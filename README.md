@@ -19,14 +19,17 @@ Antes de começar, você precisa instalar e configurar alguns programas no seu c
 - Baixe o arquivo `.bak` aqui:  
   [https://github.com/Microsoft/sql-server-samples/releases/tag/adventureworks](https://github.com/Microsoft/sql-server-samples/releases/tag/adventureworks)
 - Abra o **SQL Server Management Studio (SSMS)** ([download aqui](https://aka.ms/ssmsfullsetup)).
-- Clique com o botão direito em **Databases** → **Restore Database**.
-  <img width="1273" height="667" alt="Screenshot 2025-08-10 184511" src="https://github.com/user-attachments/assets/06c87483-aeeb-4fed-822b-e0cfd63e19a5" />
+<img width="1280" height="659" alt="Screenshot 2025-08-06 190654" src="https://github.com/user-attachments/assets/82de0e31-e938-4e71-a4ce-f1435d3ae51b" />
 
-- Escolha **Device** → localize o `.bak` baixado.
-  <img width="1270" height="666" alt="Screenshot 2025-08-10 184632" src="https://github.com/user-attachments/assets/2f3d7e1f-4270-4a49-87bb-c65f51e170f1" />
+- Clique com o botão direito em **Banco de Dados** → **Restaurar Banco de Dados**.
+<img width="1273" height="667" alt="Screenshot 2025-08-10 184511" src="https://github.com/user-attachments/assets/03b288b3-2055-4c72-860e-9eb15a131f60" />
+
+- Escolha **Dispositivo** → localize o `.bak` baixado.
+<img width="1270" height="666" alt="Screenshot 2025-08-10 184632" src="https://github.com/user-attachments/assets/cac24043-115e-43ec-97e1-2cd1bdf3dbe7" />
 
 - Restaure a base com o nome **AdventureWorks2022**.
-  <img width="849" height="649" alt="Screenshot 2025-08-10 184743" src="https://github.com/user-attachments/assets/176b336b-8567-4929-87d7-7d0cbb17dc44" />
+<img width="849" height="649" alt="Screenshot 2025-08-10 184743" src="https://github.com/user-attachments/assets/7692416c-7f24-4fdf-8e8a-fb1a2375e0b2" />
+
 
 ---
 
@@ -66,6 +69,7 @@ Antes de começar, você precisa instalar e configurar alguns programas no seu c
     ```
   - O navegador abrirá automaticamente. <br>
     Se não abrir, acesse: http://localhost:8501
-    
-<img width="1274" height="667" alt="Screenshot 2025-08-10 184920" src="https://github.com/user-attachments/assets/bdf5dc8d-75ee-4247-a899-1f296a3252e2" />
-<img width="1276" height="669" alt="Screenshot 2025-08-10 184935" src="https://github.com/user-attachments/assets/80e2fc91-9d80-4676-adc2-d55d99c5f21c" />
+
+  <img width="1274" height="667" alt="Screenshot 2025-08-10 184920" src="https://github.com/user-attachments/assets/11c1ec0a-a885-4fb9-ae61-6d6cb3350ea0" />
+  <img width="1276" height="669" alt="Screenshot 2025-08-10 184935" src="https://github.com/user-attachments/assets/2125a59f-14c2-435c-b0b8-83430519aa08" />
+
