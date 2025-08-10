@@ -70,47 +70,45 @@ st.markdown("""
 # Função para conectar ao banco de dados (versão híbrida)
 @st.cache_resource
 def conectar_banco():
-    # Configurações de conexão (substitua com suas credenciais)
-    server = "localhost\\SQLEXPRESS"  # Para cloud, use "seu_servidor.database.windows.net"
-    database = "AdventureWorks2022"
-    username = None  # Para autenticação Windows local
-    password = None  # Para autenticação Windows local
-    
-    # Se estiver no Cloud, use estas credenciais
-    if os.environ.get("IS_CLOUD", "false").lower() == "true":
-        username = "seu_usuario_cloud"
-        password = "sua_senha_cloud"
-    
+    # Configurações (substitua com seus valores)
+    config = {
+        "server": "seu_servidor.database.windows.net" if os.environ.get("IS_CLOUD") else "localhost\\SQLEXPRESS",
+        "database": "AdventureWorks2022",
+        "username": os.getenv("DB_USERNAME", ""),  # Use variáveis de ambiente
+        "password": os.getenv("DB_PASSWORD", "")
+    }
+
     try:
-        # Tenta pyodbc primeiro (local)
-        if os.environ.get("IS_CLOUD", "false").lower() != "true":
-            try:
-                import pyodbc
-                conn = pyodbc.connect(
-                    f"DRIVER={{ODBC Driver 18 for SQL Server}};"
-                    f"SERVER={server};"
-                    f"DATABASE={database};"
-                    f"Trusted_Connection=yes;"
-                    f"Encrypt=no;"
-                )
-                st.success("Conectado via pyodbc (ambiente local)")
-                return conn
-            except Exception as pyodbc_error:
-                st.warning(f"pyodbc não disponível, tentando pymssql... ({pyodbc_error})")
-        
-        # Fallback para pymssql (Cloud)
+        # Tenta pymssql primeiro (funciona no Cloud)
         import pymssql
         conn = pymssql.connect(
-            server=server,
-            user=username,
-            password=password,
-            database=database
+            server=config["server"],
+            user=config["username"],
+            password=config["password"],
+            database=config["database"]
         )
-        st.success("Conectado via pymssql (ambiente cloud)")
+        st.success("Conectado via pymssql")
         return conn
-        
+    except ImportError:
+        st.warning("pymssql não disponível, tentando pyodbc...")
     except Exception as e:
-        st.error(f"Erro na conexão com o banco de dados: {str(e)}")
+        st.warning(f"Falha no pymssql: {str(e)}")
+
+    # Fallback para pyodbc (local)
+    try:
+        import pyodbc
+        conn_str = f"""
+            DRIVER={{ODBC Driver 18 for SQL Server}};
+            SERVER={config["server"]};
+            DATABASE={config["database"]};
+            Trusted_Connection=yes;
+            Encrypt=no;
+        """
+        conn = pyodbc.connect(conn_str)
+        st.success("Conectado via pyodbc")
+        return conn
+    except Exception as e:
+        st.error(f"Falha na conexão: {str(e)}")
         return None
 
 # Verifica se está no Cloud (Streamlit Sharing, Heroku, etc.)
